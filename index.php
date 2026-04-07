@@ -5,12 +5,16 @@
  * Database: PostgreSQL
  */
 
+// عرض الأخطاء مؤقتًا لتصحيح المشاكل
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
 // جلب بيانات Postgres من متغيرات بيئة Railway
-$host = getenv('PGHOST');
-$user = getenv('PGUSER');
-$pass = getenv('PGPASSWORD');
-$db   = getenv('PGDATABASE');
-$port = getenv('PGPORT') ?: '5432';
+$host = $_ENV['PGHOST'] ?? getenv('PGHOST');
+$user = $_ENV['PGUSER'] ?? getenv('PGUSER');
+$pass = $_ENV['PGPASSWORD'] ?? getenv('PGPASSWORD');
+$db   = $_ENV['PGDATABASE'] ?? getenv('PGDATABASE');
+$port = $_ENV['PGPORT'] ?? getenv('PGPORT') ?? '5432';
 
 $notes = [];
 
@@ -22,7 +26,7 @@ try {
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
     ]);
 
-    // إنشاء الجدول تلقائياً بصيغة Postgres (SERIAL بدلاً من AUTO_INCREMENT)
+    // إنشاء الجدول تلقائياً بصيغة Postgres
     $pdo->exec("CREATE TABLE IF NOT EXISTS notes (
         id SERIAL PRIMARY KEY, 
         content TEXT, 
